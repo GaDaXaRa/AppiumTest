@@ -72,13 +72,13 @@ class TestDB {
 	}
 	
 	@Test
-	void testNewRegistry() {
+	void shouldFindArticle() {
 		Article article = findArticle(articleCode);
 		Assert.assertEquals(article.code, articleCode);
 	}
 	
 	@Test
-	void updateRegistry() {
+	void shouldUpdateRegistry() {
 		Article newArticle = new Article();
 		newArticle.code = articleCode;
 		String newDescription = "Nueva descripcion";
@@ -90,10 +90,30 @@ class TestDB {
 	}
 	
 	@Test
-	void failSearch() {
+	void shouldFailSearchForNonExisting() {
 		findArticle("343");
 		System.out.println(pageObject.msje().getText());
 		Assert.assertEquals(articleNotFound, pageObject.msje().getText());
+	}
+	
+	@Test
+	void shouldFailOnEmptyCode() {
+		Article noCodeArticle = new Article();
+		noCodeArticle.code = "";
+		noCodeArticle.description = "description";
+		noCodeArticle.value = 33;
+		boolean status = createArticle(noCodeArticle);
+		Assert.assertFalse(status);
+	}
+	
+	@Test
+	void shouldFailOnEmptyDescription() {
+		Article noCodeArticle = new Article();
+		noCodeArticle.code = "6655664";
+		noCodeArticle.description = "";
+		noCodeArticle.value = 33;
+		boolean status = createArticle(noCodeArticle);
+		Assert.assertFalse(status);
 	}
 	
 	private boolean createArticle(Article article) {
